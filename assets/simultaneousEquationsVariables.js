@@ -1,8 +1,8 @@
 const simultaneousEquationsVariables = [
     { name: 'potatoes', unit: 'kg', coefficient: 0.6 },
     { name: 'carrots', unit: 'kg', coefficient: 0.5 },
-    { name: 'cars', unit: '', coefficient: 10000 },
-    { name: 'TV', unit: '', coefficient: 500 },
+    { name: 'cars', unit: '', coefficient: 1000 },
+    { name: 'TVs', unit: '', coefficient: 50 },
     { name: 'footballs', unit: '', coefficient: 15 },
     { name: 'basketballs', unit: '', coefficient: 12 },
     { name: 'rugby balls', unit: '', coefficient: 10 },

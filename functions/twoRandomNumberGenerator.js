@@ -8,7 +8,7 @@ const twoRandomNumberGenerator = (maxNumber) => {
         return { randomNumberOne, randomNumberTwo } = twoRandomNumberGenerator(maxNumber);
     }
 
-    return { randomNumberOne: randomNumberOne, randomNumberTwo: randomNumberTwo }
+    return [randomNumberOne, randomNumberTwo]
 }
 
 export default twoRandomNumberGenerator
