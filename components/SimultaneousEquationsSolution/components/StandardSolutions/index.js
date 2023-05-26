@@ -1,4 +1,5 @@
 import StaticMath from '../../../StaticMath/StaticMath'
+import roundTwoDP from '../../../../functions/roundTwoDP'
 
 const StandardSolutions = ({
     coefficientOne,
@@ -13,6 +14,10 @@ const StandardSolutions = ({
     answerTwo,
     variableNameOne,
     variableNameTwo}) => {
+        const roundEq1Const = roundTwoDP(equationOneTotal / coefficientOne[0])
+        const roundEq2Const = roundTwoDP(equationTwoTotal / coefficientTwo[0])
+        const newConst = roundTwoDP(roundEq1Const-roundEq2Const)
+        const newCoef = roundTwoDP(-(coefficientOne[1] / coefficientOne[0]) + (coefficientTwo[1] / coefficientTwo[0]))
     return (
         <>
             <StaticMath latex={`\\text{Change the variables to x and y}`}/>
@@ -30,10 +35,10 @@ const StandardSolutions = ({
             <StaticMath latex={`\\text{x =  ${eq2Constant} - ${eq2y}y}`} />
             <br />
             <StaticMath latex={`\\text{make the two equations equal to each other}`}/>
-            <StaticMath latex={`\\text{${equationOneTotal / coefficientOne[0]} - ${eq1y}y = ${equationTwoTotal / coefficientTwo[0]} - ${eq2y}y}`} />
+            <StaticMath latex={`\\text{${roundEq1Const} - ${eq1y}y = ${roundEq2Const} - ${eq2y}y}`} />
             <br />
             <StaticMath latex={`\\text{rearrange the equation to find the y variable}`}/>
-            <StaticMath latex={`\\text{${-(coefficientOne[1] / coefficientOne[0]) + (coefficientTwo[1] / coefficientTwo[0])} y= ${(equationTwoTotal / coefficientTwo[0]) - (equationOneTotal / coefficientOne[0])}}`} />
+            <StaticMath latex={`\\text{${newCoef}y= ${newConst}}`} />
             <StaticMath latex={`\\text{y= ${answerTwo}}`} />
             <br />
             <StaticMath latex={`\\text{add this variable back into the first equation}`}/>
