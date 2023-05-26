@@ -1,5 +1,5 @@
 import { evaluateTex } from 'tex-math-parser';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../public/styles/globals.css'
 
 import MathInput from '../components/MathInput/MathInput';
@@ -21,19 +21,15 @@ export default function App({ }) {
         });
     }
 
-    function markingFunction(userInput) {
+    function markingFunctionX(userInput) {
         let inputValue;
         try {
             //the evaluateTex function takes a latex string as an input and returns the evaluation as a javascript number
             inputValue = evaluateTex(userInput).evaluated;
-            answer1 = evaluateTex(memory?.mathinput1?.defaultValue).evaluated
-            answer2 = evaluateTex(memory?.mathinput2?.defaultValue).evaluated
         } catch {
             return 0;
         }
-        if (
-            inputValue === memory?.simultaneousEquations?.answers?.x  || 
-            inputValue === memory?.simultaneousEquations?.answers?.y ) 
+        if (inputValue === memory?.simultaneousEquations?.answers?.x)
             {
             return 1
         } else {
@@ -41,43 +37,62 @@ export default function App({ }) {
         }
     }
 
-    if (!memory.simultaneousEquations) {
-        const randomNumbers = twoRandomNumberGenerator(simultaneousEquationsVariables.length);
-        const variableOne = simultaneousEquationsVariables[randomNumbers[0] - 1];
-        const variableTwo = simultaneousEquationsVariables[randomNumbers[1] - 1];
-
-        const equationOneRandomCoefficient = twoRandomNumberGenerator(10);
-        const equationTwoRandomCoefficient = twoRandomNumberGenerator(10);
-
-        const randomMultiplier = twoRandomNumberGenerator(20);
-
-        const equationOneTotal = calculateTotal(variableOne, variableTwo, equationOneRandomCoefficient, randomMultiplier);
-        const equationTwoTotal = calculateTotal(variableOne, variableTwo, equationTwoRandomCoefficient, randomMultiplier);
-
-        const x = Math.round((variableOne.coefficient) * (randomMultiplier[0]) * 100) / 100;
-        const y = Math.round((variableTwo.coefficient) * (randomMultiplier[1]) * 100) / 100;
-        const variables = { variableOne, variableTwo }
-        const coefficients = { equationOneRandomCoefficient, equationTwoRandomCoefficient }
-        const equationTotals = { equationOneTotal, equationTwoTotal }
-        const answers = { x, y }
-
-        setMemory((prev) => {
-            return { ...prev,  simultaneousEquations: { variables, coefficients, equationTotals, answers }  }
-        });
-    
+    function markingFunctionY(userInput) {
+        let inputValue;
+        try {
+            //the evaluateTex function takes a latex string as an input and returns the evaluation as a javascript number
+            inputValue = evaluateTex(userInput).evaluated;
+        } catch {
+            return 0;
+        }
+        if (inputValue === memory?.simultaneousEquations?.answers?.y) 
+            {
+            return 1
+        } else {
+            return 0;
+        }
     }
+    
+    useEffect(() => {
+        if (!memory.simultaneousEquations) {
+            const randomNumbers = twoRandomNumberGenerator(simultaneousEquationsVariables.length);
+            const variableOne = simultaneousEquationsVariables[randomNumbers[0] - 1];
+            const variableTwo = simultaneousEquationsVariables[randomNumbers[1] - 1];
+    
+            const equationOneRandomCoefficient = twoRandomNumberGenerator(10);
+            const equationTwoRandomCoefficient = twoRandomNumberGenerator(10);
+    
+            const randomMultiplier = twoRandomNumberGenerator(20);
+    
+            const equationOneTotal = calculateTotal(variableOne, variableTwo, equationOneRandomCoefficient, randomMultiplier);
+            const equationTwoTotal = calculateTotal(variableOne, variableTwo, equationTwoRandomCoefficient, randomMultiplier);
+    
+            const x = Math.round((variableOne.coefficient) * (randomMultiplier[0]) * 100) / 100;
+            const y = Math.round((variableTwo.coefficient) * (randomMultiplier[1]) * 100) / 100;
+            const variables = { variableOne, variableTwo }
+            const coefficients = { equationOneRandomCoefficient, equationTwoRandomCoefficient }
+            const equationTotals = { equationOneTotal, equationTwoTotal }
+            const answers = { x, y }
+    
+            setMemory((prev) => {
+                return { ...prev,  simultaneousEquations: { variables, coefficients, equationTotals, answers }  }
+            });
+        
+        }
+    },[memory.simultaneousEquations])
+
 
     return (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
             <div style={{ maxWidth: '800px', width: 'calc(100vw - 40px)', marginTop: '50px' }}>
-                <SimultaneousEquationsQuestion
+                {memory.simultaneousEquations ? <SimultaneousEquationsQuestion
                     variableOne={memory?.simultaneousEquations?.variables?.variableOne}
                     variableTwo={memory?.simultaneousEquations?.variables?.variableTwo}
                     equationOneRandomCoefficient={memory?.simultaneousEquations?.coefficients?.equationOneRandomCoefficient}
                     equationTwoRandomCoefficient={memory?.simultaneousEquations?.coefficients?.equationTwoRandomCoefficient}
                     equationOneTotal={memory?.simultaneousEquations?.equationTotals?.equationOneTotal}
                     equationTwoTotal={memory?.simultaneousEquations?.equationTotals?.equationTwoTotal}
-                />
+                />:null}
                 <br />
                 <br />
                 {solutionShown ? <SimultaneousEquationsSolution
@@ -92,10 +107,10 @@ export default function App({ }) {
                 /> : null}
                 <br />
                 <p>{memory?.simultaneousEquations?.variables?.variableOne.name}</p>
-                <MathInput buttons={['power', 'times']} markingFunction={markingFunction} memKey='mathinput1' memory={memory} setMemory={addToMemory} placeholder={`Type the value of ${memory?.simultaneousEquations?.variables?.variableOne.name}`} />
+                <MathInput buttons={['power', 'times']} markingFunction={markingFunctionX} memKey='mathinput1' memory={memory} setMemory={addToMemory} placeholder={`Type the value of ${memory?.simultaneousEquations?.variables?.variableOne.name}`} />
                 <br />
                 <p>{memory?.simultaneousEquations?.variables?.variableTwo.name}</p>
-                <MathInput buttons={['power', 'times']} markingFunction={markingFunction} memKey='mathinput2' memory={memory} setMemory={addToMemory} placeholder={`Type the value of ${memory?.simultaneousEquations?.variables?.variableTwo.name}`} />
+                <MathInput buttons={['power', 'times']} markingFunction={markingFunctionY} memKey='mathinput2' memory={memory} setMemory={addToMemory} placeholder={`Type the value of ${memory?.simultaneousEquations?.variables?.variableTwo.name}`} />
                 <br />
                 <br />
                 <button onClick={() => { setMemory((prev) => { return { ...prev, feedbackShown: true } }) }}>Check Answer</button>
